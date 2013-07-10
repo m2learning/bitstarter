@@ -21,11 +21,11 @@ References:
    - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
 */
 
-var fs = require('fs');
+var util    = require('util');
+var fs      = require('fs');
+var rest    = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
-var rest    = require('restler');
-var util    = require('util');
 
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
@@ -71,6 +71,7 @@ var buildfn = function(html_file) {
 	if (result instanceof Error) {
 	    console.error('Error: ' + util.format(response.message));
 	} else {
+	    //console.error('Wrote %s', html_file);
 	    fs.writeFileSync(html_file, result);
 	}
     };
@@ -81,17 +82,17 @@ var buildfn = function(html_file) {
 
 if(require.main == module) {
     program
-	.option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
-	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-	.option('-u, --url <url>', 'URL of file to check')
-	.parse(process.argv);
+    .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
+    .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+    .option('-u, --url <url>', 'URL of file to check')
+    .parse(process.argv);
 
     var html_file = program.file;
 
     if (program.url) {
-	console.log("program.url = " + program.url);
+	//console.log("program.url = " + program.url);
 	html_file = DOWNLOADED_HTML_FILE;
-	response2file = buildfn(html_file);
+	var response2file = buildfn(html_file);
 	rest.get(program.url).on('complete', response2file);
     }
 
