@@ -1,7 +1,7 @@
 var express = require('express');
-var fs = requite('fs');
+var fs = require('fs');
 
-var finename = 'index.html';
+var filename = 'index.html';
 
 var app = express.createServer(express.logger());
 
